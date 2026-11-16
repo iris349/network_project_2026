@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+
+<html lang="ko">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<meta content="dark" name="color-scheme"/>
+<title>SecureStack | Docker 기반 보안 웹서버</title>
+<style>
+    :root { --bg:#091522; --panel:#101f30; --panel-alt:#142638; --line:#34475a; --txt:#f0f6fc; --muted:#a5b6c8; --cyan:#65e1dc; --green:#9ae8c3; }
+    * {box-sizing:border-box}
+    html {scroll-behavior:auto}
+    body {margin:0;background:var(--bg);color:var(--txt);font-family:system-ui,-apple-system,"Segoe UI",sans-serif;line-height:1.65}
+    .wrap {max-width:1160px;margin:auto;padding:0 28px}
+    header {border-bottom:1px solid var(--line);background:var(--bg)}
+    .nav {display:flex;justify-content:space-between;align-items:center;min-height:76px}
+    .brand {display:flex;align-items:center;gap:12px;font-weight:800;letter-spacing:.2px;font-size:19px}
+    .brand-mark {display:grid;place-items:center;background:var(--panel-alt);border:1px solid var(--line);border-radius:0;height:40px;width:40px;color:var(--cyan);font-size:23px}
+    .hero {padding:86px 0 64px;max-width:850px}
+    .eyebrow {display:inline-flex;align-items:center;gap:9px;border:1px solid var(--line);background:var(--panel);border-radius:0;padding:6px 12px;font-size:12px;color:var(--cyan);font-weight:700;letter-spacing:.6px}
+    .dot {height:7px;width:7px;background:var(--cyan);border-radius:0}
+    h1 {font-size:clamp(36px,5.2vw,64px);line-height:1.17;letter-spacing:-2px;margin:24px 0}
+    h1 span {color:var(--cyan)}
+    .lead {max-width:670px;color:var(--muted);font-size:17px;margin:0}
+    section {padding:39px 0}
+    .section-kicker {display:block;font-size:12px;font-weight:800;letter-spacing:2px;color:var(--cyan);text-transform:uppercase}
+    h2 {font-size:30px;margin:6px 0 9px;letter-spacing:-.7px}
+    .section-desc {color:var(--muted);margin:0 0 25px}
+    .stats {display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+    .stat,.card,.architecture {background:var(--panel);border:1px solid var(--line);border-radius:0;padding:22px}
+    .stat .value {font-size:28px;font-weight:800;margin:6px 0 2px;color:var(--txt)}
+    .stat .label {color:var(--muted);font-size:13px}
+    .stat .symbol {color:var(--cyan);font-size:12px;letter-spacing:.2px}
+    .grid {display:grid;grid-template-columns:minmax(0,1fr);gap:10px}
+    .card {display:grid;grid-template-columns:58px minmax(0,1fr);column-gap:22px;align-items:start;padding:23px 27px;min-height:136px}
+    .card .icon {grid-column:1;grid-row:1 / span 3;display:grid;place-items:center;border:1px solid var(--line);border-radius:0;width:52px;height:52px;background:var(--panel-alt);font-size:24px;margin:0}
+    .card .tag {grid-column:2;grid-row:1;justify-self:start;display:inline-block;margin:0 0 8px;color:var(--green);background:#17332f;border:1px solid #2f6557;border-radius:0;font-size:11px;font-weight:700;padding:3px 10px}
+    .card h3 {grid-column:2;grid-row:2;font-size:19px;margin:0 0 5px}
+    .card p {grid-column:2;grid-row:3;color:var(--muted);margin:0;font-size:14px}
+    .architecture {padding:30px}
+    .arch-flow {display:flex;align-items:stretch;justify-content:center;gap:12px;margin-top:13px}
+    .node {flex:1;max-width:290px;min-width:0;border:1px solid var(--line);background:var(--panel-alt);border-radius:0;padding:22px;text-align:center}
+    .node .emoji {font-size:27px}
+    .node strong {display:block;margin:9px 0 4px}
+    .node small {display:block;color:var(--muted);font-size:12px;overflow-wrap:anywhere}
+    .arrow {display:flex;flex-direction:column;align-items:center;justify-content:center;color:var(--cyan);font-size:25px;min-width:80px}
+    .arrow small {font-size:10px;color:var(--muted);white-space:nowrap}
+    .note {color:var(--muted);font-size:12px;margin:22px 0 0}
+    .bottom {padding:45px 0 65px;text-align:center;color:var(--muted);border-top:1px solid var(--line);font-size:13px;margin-top:35px}
+    @media(max-width:850px) {.hero{padding-top:58px}.stats{grid-template-columns:repeat(2,minmax(0,1fr))}}
+    @media(max-width:610px) {.brand{font-size:16px}.brand-mark{width:35px;height:35px}.wrap{padding:0 17px}.hero{padding:50px 0 30px}.stats{grid-template-columns:1fr}.card{grid-template-columns:1fr;gap:6px;padding:20px}.card .icon{grid-column:1;grid-row:auto;margin-bottom:8px}.card .tag,.card h3,.card p{grid-column:1;grid-row:auto}.arch-flow{flex-direction:column;align-items:stretch}.node{max-width:none}.arrow{min-height:48px}.arrow .right{display:none}.arrow .down{display:inline}}
+    @media(min-width:611px) {.arrow .down{display:none}}
+  </style>
+</head>
+<body>
+<header>
+<div class="wrap nav">
+<div class="brand"><span aria-hidden="true" class="brand-mark">⬡</span> SecureStack</div>
+</div>
+</header>
+<main class="wrap" id="top">
+<div class="hero">
+<div>
+<div class="eyebrow"><span class="dot"></span> NETWORK SECURITY PROJECT</div>
+<h1>더 안전한 웹 환경,<br/><span>견고한 서버 구성.</span></h1>
+<p class="lead">Docker 컨테이너 기반으로 웹서버와 방화벽 네트워크를 분리하고, Nginx 보안 설정을 적용한 리눅스 웹서버 구축 프로젝트입니다.</p>
+</div>
+</div>
+<section id="overview">
+<span class="section-kicker">Overview</span><h2>프로젝트 구성</h2>
+<p class="section-desc">정적 웹페이지를 제공하는 Nginx와 Docker 기반 네트워크를 사용합니다.</p>
+<div class="stats">
+<div class="stat"><div class="symbol">01 · WEB SERVER</div><div class="value">Nginx</div><div class="label">리눅스 기반 HTTP 서버</div></div>
+<div class="stat"><div class="symbol">02 · PORT</div><div class="value">TCP 80</div><div class="label">내부 HTTP 서비스</div></div>
+<div class="stat"><div class="symbol">03 · CONTAINERS</div><div class="value">2</div><div class="label">Firewall / Webserver</div></div>
+<div class="stat"><div class="symbol">04 · NETWORK</div><div class="value">2</div><div class="label">edge-net / backend-net</div></div>
+</div>
+</section>
+<section id="security">
+<span class="section-kicker">Security Features</span><h2>적용한 보안 설정</h2>
+<p class="section-desc">구축 과정에서 적용한 Nginx 보안 설정과 보호 기능입니다.</p>
+<div class="grid">
+<article class="card"><div class="icon">🛡️</div><span class="tag">응답 헤더 확인</span><h3>보안 헤더 적용</h3><p>X-Frame-Options, X-Content-Type-Options, Referrer-Policy를 HTTP 응답에 추가했습니다.</p></article>
+<article class="card"><div class="icon">🔒</div><span class="tag">GET 200 / POST 405</span><h3>HTTP 메서드 제한</h3><p>정적 페이지에 필요한 GET과 HEAD만 허용하며 POST 등 불필요한 메서드는 405로 차단합니다.</p></article>
+<article class="card"><div class="icon">🗂️</div><span class="tag">수정 차단 테스트</span><h3>읽기 전용 마운트</h3><p>HTML 파일을 Docker 볼륨의 읽기 전용 옵션으로 연결해 컨테이너 내부 수정 시도를 차단했습니다.</p></article>
+<article class="card"><div class="icon">👁️</div><span class="tag">Server: nginx</span><h3>버전 정보 노출 제한</h3><p>server_tokens off 설정으로 일반 HTTP 응답의 Nginx 버전 표시를 제한했습니다.</p></article>
+<article class="card"><div class="icon">🌐</div><span class="tag">내부 통신 확인</span><h3>내부 네트워크 분리</h3><p>웹서버는 backend-net에 연결하고 Firewall 컨테이너를 통해 내부 HTTP 통신을 검증했습니다.</p></article>
+<article class="card"><div class="icon">⚙️</div><span class="tag">구성 검사 통과</span><h3>설정 유효성 검사</h3><p>nginx -t로 설정 문법을 검사하고 reload로 변경된 설정을 반영했습니다.</p></article>
+</div>
+</section>
+<section id="network">
+<span class="section-kicker">Architecture</span><h2>Docker 네트워크 구성</h2>
+<p class="section-desc">현재 확인된 내부 연결 구조를 나타낸 개념도입니다.</p>
+<div class="architecture">
+<div class="arch-flow">
+<div class="node"><div class="emoji">🛡️</div><strong>Firewall</strong><small>backend-net · 172.29.0.2</small><small>edge-net · 172.28.0.2</small></div>
+<div class="arrow"><span class="right">→</span><span class="down">↓</span><small>HTTP · TCP 80</small></div>
+<div class="node"><div class="emoji">🖥️</div><strong>Webserver</strong><small>backend-net · 172.29.0.10</small><small>Nginx + HTML</small></div>
+</div>
+<p class="note">* Firewall 컨테이너에서 웹서버로 직접 HTTP 요청한 통신은 검증 완료. 외부 사용자의 방화벽 경유 접속 및 패킷 필터링 동작은 별도 통합 검증이 필요합니다.</p>
+</div>
+</section>
+</main>
+<footer class="bottom"><div class="wrap">SecureStack · Docker 기반 안전한 리눅스 웹서버 구축 프로젝트<br/>본 페이지는 프로젝트 구성과 적용된 보안 기능을 소개하는 정적 웹페이지입니다.</div></footer>
+</body>
+</html>
