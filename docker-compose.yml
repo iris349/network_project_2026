@@ -25,6 +25,10 @@ services:
   webserver:
     image: nginx:alpine
 
+    volumes:
+      - ./webserver/index.html:/usr/share/nginx/html/index.html:ro
+      - ./webserver/nginx.conf:/etc/nginx/conf.d/default.conf:ro
+
     # 웹서버는 내부 네트워크에만 연결
     networks:
       backend-net:
