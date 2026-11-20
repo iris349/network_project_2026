@@ -18,6 +18,7 @@ services:
     networks:
       edge-net:
         ipv4_address: 172.28.0.2
+        gw_priority: 100
       backend-net:
         ipv4_address: 172.29.0.2
 
