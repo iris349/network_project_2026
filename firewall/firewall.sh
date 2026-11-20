@@ -1,3 +1,4 @@
+#!/bin/sh
 WEB_IP="${WEB_IP:-172.29.0.10}"      # 웹서버 IP
 ADMIN_IP="${ADMIN_IP:-172.28.0.1}"   # 관리자 IP
 

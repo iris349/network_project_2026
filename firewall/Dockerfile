@@ -16,4 +16,4 @@ COPY firewall.sh /firewall.sh
 RUN chmod +x /firewall.sh
 
 # 컨테이너 시작 시 SSH 키 생성, 방화벽 적용, SSH 서버 실행
-CMD ["/bin/sh", "-c", "ssh-keygen -A && /firewall.sh && exec /usr/sbin/sshd -D -e"]
+CMD ["/bin/sh", "-c", "echo \"admin:${ADMIN_PASSWORD}\" | chpasswd && ssh-keygen -A && /firewall.sh && exec /usr/sbin/sshd -D -e"]
